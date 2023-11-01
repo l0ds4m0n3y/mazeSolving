@@ -3,7 +3,7 @@ public class Cell {
     int col;
     char character;
     
-    Cell(int col, int row, char character){
+    Cell(int row, int col, char character){
         this.row = row;
         this.col = col;
         this.character = character;
