@@ -12,21 +12,29 @@ public class QueueMazeSolver implements MazeSolver{
     @Override
     public void solve(char[][] maze, int startR, int startC, int endR, int endC) {
         Queue<Cell> mazeQueue = new LinkedList<>();
-        for(Cell c : checkForNeighbours(maze, startR, startC)){
-            mazeQueue.offer(c);
-        }
+        Cell start = new Cell(startR, startC, '@');
+        mazeQueue.offer(start);
         while(!mazeQueue.isEmpty()){
-            System.out.println(mazeQueue.poll().character);
+            if(checkIfEnd(mazeQueue.peek())){
+                gui.setStatusText("Maze is solvable");
+                break;
+            }
+            else{
+                for(Cell c : checkForNeighbours(maze, mazeQueue.poll())){
+                    mazeQueue.offer(c);
+                    gui.drawMaze(maze);
+                }
+            }
         }
-        
+        gui.setStatusText("Maze is unsolvable");
     }
     
-    public ArrayList<Cell> checkForNeighbours(char[][] maze, int row, int col){
+    public ArrayList<Cell> checkForNeighbours(char[][] maze, Cell cell){
         ArrayList<Cell> neighbours = new ArrayList<>();
-        if(row > 0 && maze[row - 1][col] == ' ') neighbours.add(new Cell(row - 1, col, '@'));
-        if(col > 0 && maze[row][col - 1] == ' ') neighbours.add(new Cell(row, col - 1, '@'));
-        if(col < maze[0].length && maze[row][col + 1] == ' ') neighbours.add(new Cell(row, col + 1, '@'));
-        if(row < maze.length && maze[row + 1][col] == ' ') neighbours.add(new Cell(row + 1, col, '@'));
+        if(cell.row > 0 && maze[cell.row - 1][cell.col] == ' ') neighbours.add(new Cell(cell.row - 1, cell.col, '@'));
+        if(cell.col > 0 && maze[cell.row][cell.col - 1] == ' ') neighbours.add(new Cell(cell.row, cell.col - 1, '@'));
+        if(cell.col < maze[0].length && maze[cell.row][cell.col + 1] == ' ') neighbours.add(new Cell(cell.row, cell.col + 1, '@'));
+        if(cell.row < maze.length && maze[cell.row + 1][cell.col] == ' ') neighbours.add(new Cell(cell.row + 1, cell.col, '@'));
 
         return neighbours;
     }
