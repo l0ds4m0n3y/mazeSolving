@@ -13,7 +13,8 @@ public class QueueMazeSolver implements MazeSolver{
     public void solve(char[][] maze, int startR, int startC, int endR, int endC) {
         Queue<Cell> mazeQueue = new LinkedList<>();
         Cell start = new Cell(startR, startC, '@');
-        Cell end = new Cell(endR, endC, '@');
+        Cell end = new Cell(endR, endC, '*');
+
         maze[startR][startC] = '@';
         mazeQueue.offer(start);
         while(!mazeQueue.isEmpty()){
@@ -35,9 +36,13 @@ public class QueueMazeSolver implements MazeSolver{
     
     public ArrayList<Cell> checkForNeighbours(char[][] maze, Cell cell){
         ArrayList<Cell> neighbours = new ArrayList<>();
+        // check up
         if(cell.row > 0 && maze[cell.row - 1][cell.col] == ' ') neighbours.add(new Cell(cell.row - 1, cell.col, '@'));
+        // check left
         if(cell.col > 0 && maze[cell.row][cell.col - 1] == ' ') neighbours.add(new Cell(cell.row, cell.col - 1, '@'));
-        if(cell.col < maze[0].length - 1&& maze[cell.row][cell.col + 1] == ' ') neighbours.add(new Cell(cell.row, cell.col + 1, '@'));
+        // check right
+        if(cell.col < maze[0].length - 1 && maze[cell.row][cell.col + 1] == ' ') neighbours.add(new Cell(cell.row, cell.col + 1, '@'));
+        // check down
         if(cell.row < maze.length - 1 && maze[cell.row + 1][cell.col] == ' ') neighbours.add(new Cell(cell.row + 1, cell.col, '@'));
 
         return neighbours;
