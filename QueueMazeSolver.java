@@ -13,16 +13,20 @@ public class QueueMazeSolver implements MazeSolver{
     public void solve(char[][] maze, int startR, int startC, int endR, int endC) {
         Queue<Cell> mazeQueue = new LinkedList<>();
         Cell start = new Cell(startR, startC, '@');
+        Cell end = new Cell(endR, endC, '@');
+        maze[startR][startC] = '@';
         mazeQueue.offer(start);
         while(!mazeQueue.isEmpty()){
-            if(checkIfEnd(mazeQueue.peek())){
+            if(mazeQueue.peek().equals(end)){
                 gui.setStatusText("Maze is solvable");
                 break;
             }
             else{
                 for(Cell c : checkForNeighbours(maze, mazeQueue.poll())){
                     mazeQueue.offer(c);
+                    maze[c.row][c.col] = c.character;
                     gui.drawMaze(maze);
+                    try { Thread.sleep(50);} catch (Exception e) {}
                 }
             }
         }
@@ -33,13 +37,9 @@ public class QueueMazeSolver implements MazeSolver{
         ArrayList<Cell> neighbours = new ArrayList<>();
         if(cell.row > 0 && maze[cell.row - 1][cell.col] == ' ') neighbours.add(new Cell(cell.row - 1, cell.col, '@'));
         if(cell.col > 0 && maze[cell.row][cell.col - 1] == ' ') neighbours.add(new Cell(cell.row, cell.col - 1, '@'));
-        if(cell.col < maze[0].length && maze[cell.row][cell.col + 1] == ' ') neighbours.add(new Cell(cell.row, cell.col + 1, '@'));
-        if(cell.row < maze.length && maze[cell.row + 1][cell.col] == ' ') neighbours.add(new Cell(cell.row + 1, cell.col, '@'));
+        if(cell.col < maze[0].length - 1&& maze[cell.row][cell.col + 1] == ' ') neighbours.add(new Cell(cell.row, cell.col + 1, '@'));
+        if(cell.row < maze.length - 1 && maze[cell.row + 1][cell.col] == ' ') neighbours.add(new Cell(cell.row + 1, cell.col, '@'));
 
         return neighbours;
-    }
-
-    public boolean checkIfEnd(Cell cell){
-        return cell.getChar() == '*';
     }
 }

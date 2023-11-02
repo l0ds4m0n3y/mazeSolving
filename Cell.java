@@ -20,5 +20,15 @@ public class Cell {
     public char getChar() {
         return character;
     }
-    
+
+    @Override
+    public String toString() {
+        return "Cell [row=" + row + ", col=" + col + ", character=" + character + "]";
+    }
+
+    @Override
+    public boolean equals(Object c) {
+        Cell ce = (Cell) c;
+        return (ce.row == this.row && ce.col == this.col);
+    }
 }
