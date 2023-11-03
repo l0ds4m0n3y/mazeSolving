@@ -11,6 +11,7 @@ public class QueueMazeSolver implements MazeSolver{
     
     @Override
     public void solve(char[][] maze, int startR, int startC, int endR, int endC) {
+        Boolean solvable = false;
         Queue<Cell> mazeQueue = new LinkedList<>();
         Cell start = new Cell(startR, startC, '@');
         Cell end = new Cell(endR, endC, '*');
@@ -18,8 +19,9 @@ public class QueueMazeSolver implements MazeSolver{
         maze[startR][startC] = '@';
         mazeQueue.offer(start);
         while(!mazeQueue.isEmpty()){
-            if(mazeQueue.peek().equals(end)){
+            if(mazeQueue.peek().row == endR && mazeQueue.peek().col == endC){
                 gui.setStatusText("Maze is solvable");
+                solvable = true;
                 break;
             }
             else{
@@ -31,7 +33,8 @@ public class QueueMazeSolver implements MazeSolver{
                 }
             }
         }
-        gui.setStatusText("Maze is unsolvable");
+        if(!solvable)
+            gui.setStatusText("Maze is unsolvable");
     }
     
     public ArrayList<Cell> checkForNeighbours(char[][] maze, Cell cell){
