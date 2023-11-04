@@ -28,11 +28,11 @@ public class QueueMazeSolver implements MazeSolver{
                     mazeQueue.offer(c);
                     maze[c.getRow()][c.getCol()] = '@';
                     gui.drawMaze(maze);
-                    try { Thread.sleep(1);} catch (Exception e) {}
+                    // try { Thread.sleep(1);} catch (Exception e) {}
                 }
             }
         }
-            gui.setStatusText("Maze is unsolvable");
+        gui.setStatusText("Maze is unsolvable");
     }
 
     public void paintBestPath(char[][] maze, Cell start){

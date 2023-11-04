@@ -15,8 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import java.lang.reflect.InvocationTargetException;
-
 /**
  * A simple GUI for displaying and animating maze solvers.
  *
