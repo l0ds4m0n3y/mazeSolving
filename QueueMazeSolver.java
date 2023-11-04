@@ -11,42 +11,53 @@ public class QueueMazeSolver implements MazeSolver{
     
     @Override
     public void solve(char[][] maze, int startR, int startC, int endR, int endC) {
-        Boolean solvable = false;
         Queue<Cell> mazeQueue = new LinkedList<>();
-        Cell start = new Cell(startR, startC, '@');
-        Cell end = new Cell(endR, endC, '*');
+        Cell start = new Cell(startR, startC);
+        Cell end = new Cell(endR, endC);
 
         maze[startR][startC] = '@';
         mazeQueue.offer(start);
         while(!mazeQueue.isEmpty()){
-            if(mazeQueue.peek().row == endR && mazeQueue.peek().col == endC){
+            if(mazeQueue.peek().equals(end)){
+                paintBestPath(maze, mazeQueue.peek());
                 gui.setStatusText("Maze is solvable");
-                solvable = true;
-                break;
+                return;
             }
             else{
                 for(Cell c : checkForNeighbours(maze, mazeQueue.poll())){
                     mazeQueue.offer(c);
-                    maze[c.row][c.col] = c.character;
+                    maze[c.getRow()][c.getCol()] = '@';
                     gui.drawMaze(maze);
-                    try { Thread.sleep(50);} catch (Exception e) {}
+                    try { Thread.sleep(1);} catch (Exception e) {}
                 }
             }
         }
-        if(!solvable)
             gui.setStatusText("Maze is unsolvable");
+    }
+
+    public void paintBestPath(char[][] maze, Cell start){
+        Cell ptr = start;
+        while(ptr != null){
+            maze[ptr.getRow()][ptr.getCol()] = '%';
+            gui.drawMaze(maze);
+            ptr =  ptr.parent;
+        }
     }
     
     public ArrayList<Cell> checkForNeighbours(char[][] maze, Cell cell){
         ArrayList<Cell> neighbours = new ArrayList<>();
         // check up
-        if(cell.row > 0 && maze[cell.row - 1][cell.col] == ' ') neighbours.add(new Cell(cell.row - 1, cell.col, '@'));
+        if(cell.getRow() > 0 && maze[cell.getRow() - 1][cell.getCol()] == ' ') 
+                neighbours.add(new Cell(cell.getRow() - 1, cell.getCol(), cell));
         // check left
-        if(cell.col > 0 && maze[cell.row][cell.col - 1] == ' ') neighbours.add(new Cell(cell.row, cell.col - 1, '@'));
+        if(cell.getCol() > 0 && maze[cell.getRow()][cell.getCol() - 1] == ' ') 
+                neighbours.add(new Cell(cell.getRow(), cell.getCol() - 1, cell));
         // check right
-        if(cell.col < maze[0].length - 1 && maze[cell.row][cell.col + 1] == ' ') neighbours.add(new Cell(cell.row, cell.col + 1, '@'));
+        if(cell.getCol() < maze[0].length - 1 && maze[cell.getRow()][cell.getCol() + 1] == ' ') 
+                neighbours.add(new Cell(cell.getRow(), cell.getCol() + 1, cell));
         // check down
-        if(cell.row < maze.length - 1 && maze[cell.row + 1][cell.col] == ' ') neighbours.add(new Cell(cell.row + 1, cell.col, '@'));
+        if(cell.getRow() < maze.length - 1 && maze[cell.getRow() + 1][cell.getCol()] == ' ') 
+                neighbours.add(new Cell(cell.getRow() + 1, cell.getCol(), cell));
 
         return neighbours;
     }

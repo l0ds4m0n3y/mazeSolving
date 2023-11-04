@@ -1,12 +1,16 @@
 public class Cell {
     int row;
     int col;
-    char character;
+    Cell parent;
     
-    Cell(int row, int col, char character){
+    Cell(int row, int col){
         this.row = row;
         this.col = col;
-        this.character = character;
+    }
+    Cell(int row, int col, Cell parent){
+        this.row = row;
+        this.col = col;
+        this.parent = parent;
     }
 
     public int getRow() {
@@ -17,13 +21,9 @@ public class Cell {
         return col;
     }
 
-    public char getChar() {
-        return character;
-    }
-
     @Override
     public String toString() {
-        return "Cell [row=" + row + ", col=" + col + ", character=" + character + "]";
+        return "Cell [row=" + row + ", col=" + col + ", parent=" + parent + "]";
     }
 
     @Override
