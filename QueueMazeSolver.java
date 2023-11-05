@@ -154,7 +154,7 @@ public class QueueMazeSolver implements MazeSolver{
              * be nice to this algorithm by typing please when it wants to stop and it might
              * continue solving the maze.
              */
-            if(rand.nextInt(100) == 69){
+            if(rand.nextInt(1000) == 69){
                 gui.setStatusText("I give up, this might or might not be possiible");
                 String userResponse = JOptionPane.showInputDialog(null,"type \"please\" to encourage it", "I GIVE UP", JOptionPane.INFORMATION_MESSAGE);
                 if(!userResponse.toLowerCase().equals("please"))
