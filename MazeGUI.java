@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,6 +31,12 @@ public class MazeGUI extends JPanel {
     private JButton startButton;
     private MazeSolver solver;
 
+    //my addition, to choose among a queue, stack, and a cool, awesome, and funny way to solve the maze
+    private JComboBox<String> algorithmOptions;
+    private final int QUEUE_OPTION = 0;
+    private final int STACK_OPTION = 1;
+
+
     /**
      * Creates and displays the Maze GUI.
      */
@@ -42,6 +49,8 @@ public class MazeGUI extends JPanel {
         frame.setResizable(false);
         frame.pack();
         frame.setVisible(true);
+        //this puts the frame in the middle of the screen, for my sanity mostly
+        frame.setLocationRelativeTo(null); 
     }
 
     /**
@@ -77,6 +86,11 @@ public class MazeGUI extends JPanel {
         startButton.setEnabled(false);
         startButton.addActionListener(listener);
         buttonPanel.add( startButton );
+
+        String[] algorithms = {"Queue", "Stack", "Awesome"};
+        algorithmOptions = new JComboBox<>(algorithms);
+        algorithmOptions.addActionListener(listener);
+        buttonPanel.add(algorithmOptions);
 
         inputPanel.add(buttonPanel, BorderLayout.EAST);
         this.add(inputPanel, BorderLayout.NORTH);
@@ -148,7 +162,7 @@ public class MazeGUI extends JPanel {
             if( e.getSource() == startButton ) {
                 startButton.setEnabled(false);
                 loadButton.setEnabled(false);
-                mazeView.startSolver();
+                mazeView.startSolver(algorithmOptions.getSelectedIndex()); //send which algorithm to use
             }
         }
     }
@@ -209,13 +223,23 @@ public class MazeGUI extends JPanel {
             repaint();
         }
 
-        public void startSolver() {
+        public void startSolver(int algorithm) {
             if( this.originalMaze == null ) return;
             Thread t = new Thread(new Runnable() {
                 public void run() {
-                    solver.solve(originalMaze.getArray(),originalMaze.getStartRow(),
+                    if(algorithm ==  QUEUE_OPTION) // solve using a queue
+                        solver.solve(originalMaze.getArray(),originalMaze.getStartRow(),
                             originalMaze.getStartCol(),originalMaze.getGoalRow(),
                             originalMaze.getGoalCol());
+                    else if (algorithm == STACK_OPTION){ // solve using a stack
+                        solver.solveStack(originalMaze.getArray(),originalMaze.getStartRow(),
+                            originalMaze.getStartCol(),originalMaze.getGoalRow(),
+                            originalMaze.getGoalCol());
+                    }else { //uses my cool, awesome, and funny way to solve
+                        solver.solveEpicly(originalMaze.getArray(),originalMaze.getStartRow(),
+                            originalMaze.getStartCol(),originalMaze.getGoalRow(),
+                            originalMaze.getGoalCol());
+                    }
                     solverFinished();
                 }
             });
