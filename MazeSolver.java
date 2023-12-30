@@ -79,4 +79,9 @@ public interface MazeSolver {
      * @param endC
      */
     void solveEpicly(char[][] maze, int startR, int startC, int endR, int endC);
+
+    /**
+     * 
+     */
+    void solveAStar(char[][] maze, int startR, int startC, int endR, int endC);
 }

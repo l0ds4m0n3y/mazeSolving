@@ -35,6 +35,7 @@ public class MazeGUI extends JPanel {
     private JComboBox<String> algorithmOptions;
     private final int QUEUE_OPTION = 0;
     private final int STACK_OPTION = 1;
+    private final int A_STAR_OPTION = 2;
 
 
     /**
@@ -87,7 +88,7 @@ public class MazeGUI extends JPanel {
         startButton.addActionListener(listener);
         buttonPanel.add( startButton );
 
-        String[] algorithms = {"Queue", "Stack", "Awesome"};
+        String[] algorithms = {"Queue", "Stack", "A-Star", "Awesome"};
         algorithmOptions = new JComboBox<>(algorithms);
         algorithmOptions.addActionListener(listener);
         buttonPanel.add(algorithmOptions);
@@ -227,12 +228,17 @@ public class MazeGUI extends JPanel {
             if( this.originalMaze == null ) return;
             Thread t = new Thread(new Runnable() {
                 public void run() {
-                    if(algorithm ==  QUEUE_OPTION) // solve using a queue
+                    Cell.setEndStart(originalMaze.getGoalCol(), originalMaze.getGoalRow());
+                    if(algorithm ==  QUEUE_OPTION){ // solve using a queue
                         solver.solve(originalMaze.getArray(),originalMaze.getStartRow(),
                             originalMaze.getStartCol(),originalMaze.getGoalRow(),
                             originalMaze.getGoalCol());
-                    else if (algorithm == STACK_OPTION){ // solve using a stack
+                    }else if (algorithm == STACK_OPTION){ // solve using a stack
                         solver.solveStack(originalMaze.getArray(),originalMaze.getStartRow(),
+                            originalMaze.getStartCol(),originalMaze.getGoalRow(),
+                            originalMaze.getGoalCol());
+                    }else if(algorithm == A_STAR_OPTION){ //solve using A star
+                        solver.solveAStar(originalMaze.getArray(),originalMaze.getStartRow(),
                             originalMaze.getStartCol(),originalMaze.getGoalRow(),
                             originalMaze.getGoalCol());
                     }else { //uses my cool, awesome, and funny way to solve

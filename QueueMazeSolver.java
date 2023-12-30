@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Stack;
@@ -116,7 +117,7 @@ public class QueueMazeSolver implements MazeSolver{
     //this one is a joke and should not be used as an actual algorithm
     @Override
     public void solveEpicly(char[][] maze, int startR, int startC, int endR, int endC) {
-        Queue<Cell> mazeQueue = new LinkedList<>();
+        Queue<Cell> mazeQueue = new PriorityQueue<>(Collections.reverseOrder());
         Random rand = new Random();
         
         Cell start = new Cell(startR, startC);
@@ -130,10 +131,10 @@ public class QueueMazeSolver implements MazeSolver{
              * you never know if that path you ignored was the most optimal way to go,
              * so this algortihm chooses at random which path to search next!
              */
-            LinkedList<Cell> temp = new LinkedList<>(mazeQueue);
-            Collections.shuffle(temp);
-            mazeQueue.clear();
-            mazeQueue = temp;
+            // LinkedList<Cell> temp = new LinkedList<>(mazeQueue);
+            // Collections.shuffle(temp);
+            // mazeQueue.clear();
+            // mazeQueue = temp;
 
             Cell currentCell = mazeQueue.poll();
             
@@ -170,5 +171,33 @@ public class QueueMazeSolver implements MazeSolver{
             }
         }
         gui.setStatusText("Maze might be unsolvable"); // you never know!
+    }
+    @Override
+    public void solveAStar(char[][] maze, int startR, int startC, int endR, int endC) {
+        Queue<Cell> mazeQueue = new PriorityQueue<>();
+
+        Cell start = new Cell(startR, startC);
+        Cell end = new Cell(endR, endC);
+
+        maze[startR][startC] = '@';
+        mazeQueue.offer(start);
+        
+        while(!mazeQueue.isEmpty()){
+            Cell currentCell = mazeQueue.poll();
+
+            if(currentCell.equals(end)){
+                paintBestPath(maze, currentCell);
+                gui.setStatusText("Maze is solvable");
+                return;
+            }
+
+            for(Cell neighbour : checkForNeighbours(maze, currentCell)){
+                mazeQueue.offer(neighbour);
+                maze[neighbour.getRow()][neighbour.getCol()] = '@';
+                gui.drawMaze(maze);
+                // try { Thread.sleep(1);} catch (Exception e) {}
+            }
+        }
+        gui.setStatusText("Maze is unsolvable");
     }
 }
